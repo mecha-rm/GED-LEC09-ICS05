@@ -35,9 +35,13 @@ public class TileController : MonoBehaviour
     public TileTypes[,] Tiles;
     public Tile[,] TileArray;
 
+    public GameObject player;
+    public Transform spawnPoint;
+
     // Start is called before the first frame update
     void Start()
     {
+        Instantiate(player, spawnPoint);
         Generate();
     }
 
@@ -68,6 +72,7 @@ public class TileController : MonoBehaviour
 
     public void Generate()
     {
+        player.transform.position = transform.position;
         Tiles = new TileTypes[width, height];
         TileArray = new Tile[width, height];
         InitTiles();
