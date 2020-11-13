@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -20,12 +21,22 @@ public class PlayerBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _Move();
+        // _Move();
     }
 
-    void _Move()
-    {
+    // void _Move()
+    // {
+    // 
+    // }
 
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        Debug.Log("On Move");
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        Debug.Log("On Jump");
     }
 
     public void OnCollisionEnter2D(Collision2D other)
