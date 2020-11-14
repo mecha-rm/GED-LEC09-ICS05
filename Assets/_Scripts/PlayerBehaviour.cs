@@ -54,22 +54,28 @@ public class PlayerBehaviour : MonoBehaviour
         //     // }
         // }
 
-        // standing position if not moving
-        if (Mathf.Approximately(m_rigidBody2D.velocity.x, 0.0F))
-        {
-            m_animator.SetInteger("AnimState", 0);
-        }
-
 
         // Jump
         if (isGrounded)
         {
             // m_rigidBody2D.AddForce(direction * horizontalForce * Time.deltaTime);
 
-            if (Mathf.Abs(m_rigidBody2D.velocity.x) > 0.1F)
+            // if (Mathf.Abs(m_rigidBody2D.velocity.x) > 0.1F)
+            if (Mathf.Abs(m_rigidBody2D.velocity.y) > 0.5F)
+            {
+                m_animator.SetInteger("AnimState", 2);
+            }
+            else
             {
                 m_animator.SetInteger("AnimState", 1);
             }
+        }
+
+        // standing position if not moving (originally only checked x)
+        if (Mathf.Approximately(m_rigidBody2D.velocity.x, 0.0F)
+            && m_rigidBody2D.velocity.y == 0.0F)
+        {
+            m_animator.SetInteger("AnimState", 0);
         }
     }
 
@@ -100,7 +106,7 @@ public class PlayerBehaviour : MonoBehaviour
                 break;
         }
 
-        m_animator.SetInteger("AnimState", 1);
+        // m_animator.SetInteger("AnimState", 1);
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -109,7 +115,11 @@ public class PlayerBehaviour : MonoBehaviour
 
         // ForceMode2D was added
         if(isGrounded)
-            m_rigidBody2D.AddForce(Vector2.up * verticalForce * Time.deltaTime, ForceMode2D.Impulse);
+            m_rigidBody2D.AddForce(Vector2.up * verticalForce, ForceMode2D.Impulse);
+
+        // original (with delta time)
+        // m_rigidBody2D.AddForce(Vector2.up * verticalForce * Time.deltaTime, ForceMode2D.Impulse);
+        // m_animator.SetInteger("AnimState", 2);
 
     }
 
