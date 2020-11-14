@@ -35,13 +35,21 @@ public class TileController : MonoBehaviour
     public TileTypes[,] Tiles;
     public Tile[,] TileArray;
 
+    // player and spawn position
     public GameObject player;
     public Transform spawnPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(player, spawnPoint);
+        // creates a new player that's positioned at the spawn point.
+        // makes player child of spawn
+        Instantiate(player, spawnPoint); // old
+
+        // makes player independent object.
+        // GameObject newPlayer = Instantiate(player); // new
+        // newPlayer.transform.position = spawnPoint.position; // new
+
         Generate();
     }
 
@@ -72,7 +80,8 @@ public class TileController : MonoBehaviour
 
     public void Generate()
     {
-        player.transform.position = transform.position;
+        // puts player at position
+        // player.transform.position = transform.position;
         Tiles = new TileTypes[width, height];
         TileArray = new Tile[width, height];
         InitTiles();

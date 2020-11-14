@@ -6,10 +6,10 @@ using UnityEngine.InputSystem;
 public class PlayerBehaviour : MonoBehaviour
 {
     public bool isGrounded;
-    public float verticalForce;
-    public float horizontalForce;
+    public float verticalForce; // jump force
+    public float horizontalForce; // movement force
 
-    private Vector2 direction;
+    private Vector2 direction; // direction of movement
 
     private Rigidbody2D m_rigidBody2D;
     private SpriteRenderer m_spriteRenderer;
@@ -32,14 +32,15 @@ public class PlayerBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
 
-        // if no direction keys are being pressed.
+        // if no directional keys are being pressed, the direction is set to (0, 0)
         if(direction != Vector2.zero && (!Keyboard.current.aKey.isPressed && !Keyboard.current.leftArrowKey.isPressed
             && !Keyboard.current.dKey.isPressed && !Keyboard.current.rightArrowKey.isPressed))
         {
             direction = Vector2.zero;
         }
         
-        // if the direction is not set to 0.
+        // if the direction is not set to 0, add force for movement.
+        // if the direction is 0, there is no more force being applied, so the player will slow down naturally.
         if(direction != Vector2.zero)
         {
             m_rigidBody2D.AddForce(direction * horizontalForce * Time.deltaTime, ForceMode2D.Force);
@@ -60,8 +61,9 @@ public class PlayerBehaviour : MonoBehaviour
         {
             // m_rigidBody2D.AddForce(direction * horizontalForce * Time.deltaTime);
 
+            // changes animation if the player is falling, or puts it back to walk if not falling.
             // if (Mathf.Abs(m_rigidBody2D.velocity.x) > 0.1F)
-            if (Mathf.Abs(m_rigidBody2D.velocity.y) > 0.5F)
+            if (Mathf.Abs(m_rigidBody2D.velocity.y) > 0.5F) // original value made it change too soon.
             {
                 m_animator.SetInteger("AnimState", 2);
             }
@@ -71,7 +73,7 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
 
-        // standing position if not moving (originally only checked x)
+        // standing position if not moving (originally only checked x, now checks for x and y)
         if (Mathf.Approximately(m_rigidBody2D.velocity.x, 0.0F)
             && m_rigidBody2D.velocity.y == 0.0F)
         {
@@ -89,6 +91,7 @@ public class PlayerBehaviour : MonoBehaviour
         // Debug.Log("On Move");
         // direction = context.ReadValue<Vector2>();
 
+        // checks for direction for both sprite and movement
         switch(context.control.name)
         {
             case "a":
@@ -113,7 +116,9 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // Debug.Log("On Jump");
 
-        // ForceMode2D was added
+        // ForceMode2D.Impulse was added since this is a sudden burst of force.
+        // delta time was taken out since this only applies force on one frame anyway.
+        // plus the delta time made the jump inconsistent.
         if(isGrounded)
             m_rigidBody2D.AddForce(Vector2.up * verticalForce, ForceMode2D.Impulse);
 
